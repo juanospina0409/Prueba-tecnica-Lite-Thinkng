@@ -7,10 +7,10 @@ export default function Inventario() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   // Filtros
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   // Email Form State
   const [email, setEmail] = useState('');
   const [emailLoading, setEmailLoading] = useState(false);
@@ -53,7 +53,7 @@ export default function Inventario() {
   // REQUERIMIENTO d) Descargar Reporte PDF
   const handleDownloadPDF = async () => {
     if (productos.length === 0) return;
-    
+
     try {
       const res = await fetch('http://localhost:8001/api/micro/pdf/generate', {
         method: 'POST',
@@ -147,7 +147,7 @@ export default function Inventario() {
   return (
     <Layout>
       <Head>
-        <title>Inventario Consolidade - LiteInventory</title>
+        <title>Inventario Consolidade - DataSoft Inventory</title>
       </Head>
 
       <div className="page-header" style={{ marginBottom: '2rem' }}>
@@ -155,11 +155,11 @@ export default function Inventario() {
           <h1 className="page-title">Inventario de Productos</h1>
           <p className="page-subtitle">Reporte consolidado de productos por empresa y exportación de datos</p>
         </div>
-        
+
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          <button 
-            onClick={handleDownloadPDF} 
-            className="btn btn-secondary" 
+          <button
+            onClick={handleDownloadPDF}
+            className="btn btn-secondary"
             style={{ width: 'auto' }}
             disabled={productos.length === 0}
           >
@@ -212,9 +212,9 @@ export default function Inventario() {
             required
             disabled={productos.length === 0 || emailLoading}
           />
-          <button 
-            type="submit" 
-            className="btn btn-primary" 
+          <button
+            type="submit"
+            className="btn btn-primary"
             style={{ width: 'auto' }}
             disabled={productos.length === 0 || emailLoading}
           >

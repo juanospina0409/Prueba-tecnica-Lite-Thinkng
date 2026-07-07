@@ -48,9 +48,9 @@ export default function Home() {
   return (
     <Layout>
       <Head>
-        <title>Dashboard - LiteInventory</title>
+        <title>Dashboard - DataSoft Inventory</title>
       </Head>
-      
+
       <div className="page-header" style={{ marginBottom: '2.5rem' }}>
         <div>
           <h1 className="page-title">Dashboard</h1>
@@ -71,8 +71,8 @@ export default function Home() {
           Hola, <span style={{ color: 'var(--primary)' }}>{user.correo}</span>
         </h2>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.5' }}>
-          Tu nivel de acceso actual es <span className={`role-badge ${user.rol === 'Administrador' ? 'admin' : 'externo'}`} style={{ display: 'inline-block', float: 'none', margin: '0 0.25rem' }}>{user.rol}</span>. 
-          {user.rol === 'Administrador' 
+          Tu nivel de acceso actual es <span className={`role-badge ${user.rol === 'Administrador' ? 'admin' : 'externo'}`} style={{ display: 'inline-block', float: 'none', margin: '0 0.25rem' }}>{user.rol}</span>.
+          {user.rol === 'Administrador'
             ? ' Tienes control total sobre el inventario, incluyendo el registro, edición y eliminación de empresas y productos.'
             : ' Puedes navegar y visualizar la información del inventario de empresas como visitante.'}
         </p>
@@ -119,15 +119,15 @@ export default function Home() {
             cursor: 'pointer',
             transition: 'var(--transition)'
           }}
-          className="quick-action-card"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--primary)';
-            e.currentTarget.style.transform = 'translateX(4px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border-color)';
-            e.currentTarget.style.transform = 'none';
-          }}>
+            className="quick-action-card"
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--primary)';
+              e.currentTarget.style.transform = 'translateX(4px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-color)';
+              e.currentTarget.style.transform = 'none';
+            }}>
             <div style={{ flex: 1 }}>
               <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.25rem' }}>Ver Empresas</h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Lista de socios y proveedores</p>
@@ -148,15 +148,15 @@ export default function Home() {
             cursor: 'pointer',
             transition: 'var(--transition)'
           }}
-          className="quick-action-card"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--primary)';
-            e.currentTarget.style.transform = 'translateX(4px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border-color)';
-            e.currentTarget.style.transform = 'none';
-          }}>
+            className="quick-action-card"
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--primary)';
+              e.currentTarget.style.transform = 'translateX(4px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-color)';
+              e.currentTarget.style.transform = 'none';
+            }}>
             <div style={{ flex: 1 }}>
               <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.25rem' }}>Ver Productos</h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Administrar el catálogo de productos</p>
@@ -177,15 +177,15 @@ export default function Home() {
             cursor: 'pointer',
             transition: 'var(--transition)'
           }}
-          className="quick-action-card"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--primary)';
-            e.currentTarget.style.transform = 'translateX(4px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border-color)';
-            e.currentTarget.style.transform = 'none';
-          }}>
+            className="quick-action-card"
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--primary)';
+              e.currentTarget.style.transform = 'translateX(4px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-color)';
+              e.currentTarget.style.transform = 'none';
+            }}>
             <div style={{ flex: 1 }}>
               <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.25rem' }}>Reporte de Inventario</h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Exportación de PDF y envío de emails</p>
@@ -206,15 +206,15 @@ export default function Home() {
             cursor: 'pointer',
             transition: 'var(--transition)'
           }}
-          className="quick-action-card"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--primary)';
-            e.currentTarget.style.transform = 'translateX(4px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border-color)';
-            e.currentTarget.style.transform = 'none';
-          }}>
+            className="quick-action-card"
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--primary)';
+              e.currentTarget.style.transform = 'translateX(4px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-color)';
+              e.currentTarget.style.transform = 'none';
+            }}>
             <div style={{ flex: 1 }}>
               <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.25rem' }}>Copiloto IA & Ledger</h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Verificar Blockchain y sugerir con IA</p>

@@ -32,7 +32,7 @@ app = FastAPI(title="Microservicio de Reportes e Integración", version="1.0.0")
 # Habilitar CORS para conectar con el frontend Next.js y Django
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # En desarrollo permitimos todos
+    allow_origins=["*"], # En desarrollo permitir todos
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -245,7 +245,7 @@ def send_pdf(dto: EmailSendDTO):
             msg = MIMEMultipart()
             msg['From'] = smtp_user
             msg['To'] = dto.email
-            msg['Subject'] = "Reporte de Inventario - Lite Thinking"
+            msg['Subject'] = "Reporte de Inventario - DataSoft Inventory"
             
             body = "Hola,\n\nAdjunto encontrarás el reporte en formato PDF con la información consolidada de los productos por empresa.\n\nAtentamente,\nDataSoft Inventory"
             msg.attach(MIMEText(body, 'plain'))

@@ -9,7 +9,7 @@ from pydantic import ValidationError as PydanticValidationError
 from .models import EmpresaModel, ProductoModel, UsuarioModel
 from .serializers import EmpresaSerializer, ProductoSerializer, UsuarioRegistroSerializer
 
-# Importamos directamente tus entidades Pydantic del paquete de dominio
+# Se importan las entidades Pydantic del paquete de dominio
 from domain.entities import Empresa
 
 
@@ -64,7 +64,7 @@ class EmpresaViewSet(viewsets.ModelViewSet):
 
 
 # ==========================================
-# 2. VIEWSET DE PRODUCTO (Con Permisos)
+# 2. VIEWSET DE PRODUCTO
 # ==========================================
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = ProductoModel.objects.all()
@@ -76,7 +76,7 @@ class ProductoViewSet(viewsets.ModelViewSet):
 # 3. ENDPOINT DE REGISTRO DE USUARIOS
 # ==========================================
 @api_view(['POST'])
-@permission_classes([AllowAny]) # Permitir que cualquiera pueda registrarse inicialmente
+@permission_classes([AllowAny]) # Se permite que cualquiera pueda registrarse inicialmente
 def registrar_usuario(request):
     serializer = UsuarioRegistroSerializer(data=request.data)
     if serializer.is_valid():
@@ -89,7 +89,7 @@ def registrar_usuario(request):
 
 
 # ==========================================
-# 4. ENDPOINT DE INICIO DE SESIÓN (Login)
+# 4. ENDPOINT DE INICIO DE SESIÓN
 # ==========================================
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -119,7 +119,7 @@ def login_usuario(request):
 
 
 # ==========================================
-# 5. ENDPOINT PARA OBTENER EL USUARIO ACTUAL (/me)
+# 5. ENDPOINT PARA OBTENER EL USUARIO ACTUAL
 # ==========================================
 @api_view(['GET'])
 def obtener_perfil(request):

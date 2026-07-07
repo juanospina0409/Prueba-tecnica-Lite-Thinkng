@@ -2,10 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 # ==========================================
-# 1. MODELO DE EMPRESA (Requerimiento a)
+# 1. MODELO DE EMPRESA
 # ==========================================
 class EmpresaModel(models.Model):
-    # Definimos el NIT explícitamente como llave primaria (primary_key=True)
     nit = models.CharField(max_length=50, primary_key=True)
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255)
@@ -19,7 +18,7 @@ class EmpresaModel(models.Model):
 
 
 # ==========================================
-# 2. MODELO DE PRODUCTO Y INVENTARIO (Requerimiento b y e)
+# 2. MODELO DE PRODUCTO E INVENTARIO 
 # ==========================================
 class ProductoModel(models.Model):
     codigo = models.CharField(max_length=100, unique=True)
@@ -29,8 +28,8 @@ class ProductoModel(models.Model):
     # "Precio en varias monedas": Guardamos un JSON estructurado ej: {"USD": 50, "COP": 200000}
     precios = models.JSONField(default=dict)
     
-    # Relación con la Empresa (Punto b y e)
-    # Al eliminar una empresa, se eliminan sus productos en cascada (opcional, pero buena práctica)
+    # Relación con la Empresa
+    # Al eliminar una empresa, se eliminan sus productos en cascada
     empresa = models.ForeignKey(EmpresaModel, on_delete=models.CASCADE, related_name='productos')
 
     class Meta:
@@ -41,7 +40,7 @@ class ProductoModel(models.Model):
 
 
 # ==========================================
-# 3. GESTIÓN DE USUARIOS PERSONALIZADOS (Requerimiento c, e y f)
+# 3. GESTIÓN DE USUARIOS 
 # ==========================================
 class UsuarioManager(BaseUserManager):
     def create_user(self, correo, password=None, rol='Externo'):
@@ -52,7 +51,7 @@ class UsuarioManager(BaseUserManager):
             correo=self.normalize_email(correo),
             rol=rol,
         )
-        user.set_password(password) # Encripta automáticamente la contraseña (Requerimiento f)
+        user.set_password(password) # Encripta automáticamente la contraseña
         user.save(using=self._db)
         return user
 
@@ -66,7 +65,7 @@ class UsuarioManager(BaseUserManager):
 class UsuarioModel(AbstractBaseUser):
     correo = models.EmailField(max_length=255, unique=True)
     
-    # Definimos los roles permitidos explícitamente (Requerimiento e)
+    # Se definen los roles permitidos explícitamente
     ROLES_CHOICES = [
         ('Administrador', 'Administrador'),
         ('Externo', 'Externo'),

@@ -14,31 +14,23 @@ import environ
 from pathlib import Path
 import sys
 
-# Inicializamos environ
 env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(env_file=str(BASE_DIR.parent / '.env'))
-# Buscamos la raíz del proyecto actual y subimos un nivel para encontrar domain-package
-# 1. Tu configuración para enlazar la capa de dominio
+# Configuración para enlazar la capa de dominio
 DOMAIN_PATH = BASE_DIR.parent / 'domain-package'
 
 if str(DOMAIN_PATH) not in sys.path:
     sys.path.append(str(DOMAIN_PATH))
 
-# 2. La configuración estándar que Django necesita para arrancar internamente
-# (Django usa este BASE_DIR internamente, lo dejamos apuntando a la raíz del backend)
+# Configuración estándar que Django necesita para arrancar internamente
 DJANGO_BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-m9!094cgyylatkn&duwkg9#w_jrnd!u#0!ce-em!$stx)#=9+)'
-
-# SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG NO EJECUTAR EN PRODUCCIÓN
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -98,8 +90,8 @@ DATABASES = {
         'NAME': env('DB_NAME'),
         'USER': env('DB_USER'),
         'PASSWORD': env('DB_PASSWORD'),
-        'HOST': '127.0.0.1',  # O 'localhost', apunta a tu máquina local donde corre Docker
-        'PORT': '5432',       # El puerto estándar de PostgreSQL que mapeamos
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -139,11 +131,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# Agrega esta línea al final del archivo settings.py para activar tu Usuario personalizado
+# Activar Usuario personalizado
 AUTH_USER_MODEL = 'inventario.UsuarioModel'
 
 # Configuración de CORS para permitir solicitudes del frontend
-CORS_ALLOW_ALL_ORIGINS = True  # Para propósitos de la prueba técnica
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Configuración de Django Rest Framework
 REST_FRAMEWORK = {

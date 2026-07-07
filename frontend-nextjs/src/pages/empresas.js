@@ -8,7 +8,7 @@ export default function Empresas() {
   const [user, setUser] = useState({ rol: '' });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('create'); // 'create' | 'edit'
@@ -65,17 +65,17 @@ export default function Empresas() {
     e.preventDefault();
     setFormError('');
     const token = localStorage.getItem('token');
-    
+
     // Validaciones básicas requeridas por el Dominio
     if (formData.nombre.length < 2) {
       setFormError('El nombre debe tener al menos 2 caracteres (Regla del Dominio)');
       return;
     }
 
-    const url = modalMode === 'create' 
-      ? 'http://localhost:8000/api/empresas/' 
+    const url = modalMode === 'create'
+      ? 'http://localhost:8000/api/empresas/'
       : `http://localhost:8000/api/empresas/${formData.nit}/`;
-      
+
     const method = modalMode === 'create' ? 'POST' : 'PUT';
 
     try {
@@ -93,7 +93,7 @@ export default function Empresas() {
       if (res.ok) {
         setIsModalOpen(false);
         fetchEmpresas();
-        
+
         // Registrar transacción en el Ledger de Auditoría (Blockchain)
         try {
           await fetch('http://localhost:8001/api/micro/blockchain/add', {
@@ -135,7 +135,7 @@ export default function Empresas() {
 
       if (res.ok) {
         fetchEmpresas();
-        
+
         // Registrar en Blockchain
         try {
           await fetch('http://localhost:8001/api/micro/blockchain/add', {
@@ -162,7 +162,7 @@ export default function Empresas() {
   return (
     <Layout>
       <Head>
-        <title>Empresas - LiteInventory</title>
+        <title>Empresas - DataSoft Inventory</title>
       </Head>
 
       <div className="page-header">
@@ -223,16 +223,16 @@ export default function Empresas() {
                     {isAdm && (
                       <td style={{ textAlign: 'right' }}>
                         <div className="action-buttons" style={{ justifyContent: 'flex-end' }}>
-                          <button 
-                            onClick={() => openEditModal(emp)} 
+                          <button
+                            onClick={() => openEditModal(emp)}
                             className="btn btn-outline btn-sm"
                             style={{ padding: '0.35rem 0.6rem' }}
                             title="Editar"
                           >
                             <Edit2 size={14} />
                           </button>
-                          <button 
-                            onClick={() => handleDelete(emp.nit, emp.nombre)} 
+                          <button
+                            onClick={() => handleDelete(emp.nit, emp.nombre)}
                             className="btn btn-danger btn-sm"
                             style={{ padding: '0.35rem 0.6rem' }}
                             title="Eliminar"
@@ -295,7 +295,7 @@ export default function Empresas() {
                   className="form-control"
                   value={formData.nombre}
                   onChange={handleInputChange}
-                  placeholder="Ej: Lite Thinking S.A.S."
+                  placeholder="Ej: DataSoft Inventory S.A.S."
                   required
                 />
               </div>

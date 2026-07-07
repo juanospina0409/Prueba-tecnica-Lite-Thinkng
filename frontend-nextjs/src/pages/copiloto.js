@@ -6,7 +6,7 @@ import { Cpu, ShieldCheck, ShieldAlert, Sparkles, RefreshCw, Layers } from 'luci
 export default function Copiloto() {
   const [ledger, setLedger] = useState({ chain: [], is_valid: true, length: 0 });
   const [loadingLedger, setLoadingLedger] = useState(true);
-  
+
   // AI Playground State
   const [aiName, setAiName] = useState('');
   const [aiFeatures, setAiFeatures] = useState('');
@@ -65,7 +65,7 @@ export default function Copiloto() {
   return (
     <Layout>
       <Head>
-        <title>IA y Auditoría Blockchain - LiteInventory</title>
+        <title>IA y Auditoría Blockchain - DataSoft Inventory</title>
       </Head>
 
       <div className="page-header">
@@ -83,8 +83,8 @@ export default function Copiloto() {
             <span>Asistente Copiloto de IA</span>
           </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
-            Esta herramienta utiliza un modelo de Lenguaje de Inteligencia Artificial para optimizar descripciones. 
-            Está integrado en el botón <strong>"Optimizar con IA"</strong> del formulario de registro de productos, 
+            Esta herramienta utiliza un modelo de Lenguaje de Inteligencia Artificial para optimizar descripciones.
+            Está integrado en el botón <strong>"Optimizar con IA"</strong> del formulario de registro de productos,
             pero puedes probarlo de manera independiente en este laboratorio:
           </p>
 
@@ -146,9 +146,9 @@ export default function Copiloto() {
                 <Layers size={18} style={{ color: 'var(--secondary)' }} />
                 <span>Auditoría Blockchain</span>
               </h2>
-              <button 
-                onClick={fetchLedger} 
-                className="btn btn-outline btn-sm" 
+              <button
+                onClick={fetchLedger}
+                className="btn btn-outline btn-sm"
                 style={{ width: 'auto', padding: '0.35rem 0.5rem' }}
                 title="Sincronizar Ledger"
               >
@@ -157,7 +157,7 @@ export default function Copiloto() {
             </div>
 
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1.5', marginBottom: '1.5rem' }}>
-              Cada acción de creación, edición o eliminación en la base de datos Django de Empresas o Productos 
+              Cada acción de creación, edición o eliminación en la base de datos Django de Empresas o Productos
               registra una transacción inmutable en el microservicio FastAPI. Los bloques están enlazados criptográficamente mediante hashes SHA-256.
             </p>
 
@@ -196,7 +196,7 @@ export default function Copiloto() {
             <h3 style={{ fontSize: '0.95rem', fontWeight: '800', color: 'var(--text-muted)', marginBottom: '1rem', textTransform: 'uppercase' }}>
               Historial de Bloques
             </h3>
-            
+
             {loadingLedger ? (
               <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '1rem' }}>Cargando cadena...</div>
             ) : (

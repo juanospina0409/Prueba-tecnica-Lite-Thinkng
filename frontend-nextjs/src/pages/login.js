@@ -47,7 +47,7 @@ export default function Login() {
   return (
     <Layout>
       <Head>
-        <title>Iniciar Sesión - LiteInventory</title>
+        <title>Iniciar Sesión - DataSoft Inventory</title>
       </Head>
       <div className="auth-wrapper">
         <div className="auth-card">
@@ -67,15 +67,15 @@ export default function Login() {
                 Correo Electrónico
               </label>
               <div style={{ position: 'relative' }}>
-                <Mail 
-                  size={16} 
-                  style={{ 
-                    position: 'absolute', 
-                    left: '1rem', 
-                    top: '50%', 
-                    transform: 'translateY(-50%)', 
-                    color: '#94a3b8' 
-                  }} 
+                <Mail
+                  size={16}
+                  style={{
+                    position: 'absolute',
+                    left: '1rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: '#94a3b8'
+                  }}
                 />
                 <input
                   id="correo"
@@ -95,15 +95,15 @@ export default function Login() {
                 Contraseña
               </label>
               <div style={{ position: 'relative' }}>
-                <Lock 
-                  size={16} 
-                  style={{ 
-                    position: 'absolute', 
-                    left: '1rem', 
-                    top: '50%', 
-                    transform: 'translateY(-50%)', 
-                    color: '#94a3b8' 
-                  }} 
+                <Lock
+                  size={16}
+                  style={{
+                    position: 'absolute',
+                    left: '1rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: '#94a3b8'
+                  }}
                 />
                 <input
                   id="password"

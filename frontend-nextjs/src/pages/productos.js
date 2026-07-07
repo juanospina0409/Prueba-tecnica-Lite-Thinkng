@@ -160,7 +160,7 @@ export default function Productos() {
     const url = modalMode === 'create'
       ? 'http://localhost:8000/api/productos/'
       : `http://localhost:8000/api/productos/${formData.id}/`;
-    
+
     const method = modalMode === 'create' ? 'POST' : 'PUT';
 
     try {
@@ -240,7 +240,7 @@ export default function Productos() {
   return (
     <Layout>
       <Head>
-        <title>Productos - LiteInventory</title>
+        <title>Productos - DataSoft Inventory</title>
       </Head>
 
       <div className="page-header">
@@ -313,16 +313,16 @@ export default function Productos() {
                     {isAdm && (
                       <td style={{ textAlign: 'right' }}>
                         <div className="action-buttons" style={{ justifyContent: 'flex-end' }}>
-                          <button 
-                            onClick={() => openEditModal(prod)} 
+                          <button
+                            onClick={() => openEditModal(prod)}
                             className="btn btn-outline btn-sm"
                             style={{ padding: '0.35rem 0.6rem' }}
                             title="Editar"
                           >
                             <Edit2 size={14} />
                           </button>
-                          <button 
-                            onClick={() => handleDelete(prod.id, prod.codigo, prod.nombre)} 
+                          <button
+                            onClick={() => handleDelete(prod.id, prod.codigo, prod.nombre)}
                             className="btn btn-danger btn-sm"
                             style={{ padding: '0.35rem 0.6rem' }}
                             title="Eliminar"
@@ -413,14 +413,14 @@ export default function Productos() {
               <div className="form-group">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                   <label className="form-label" htmlFor="caracteristicas" style={{ marginBottom: 0 }}>Características</label>
-                  <button 
-                    type="button" 
-                    onClick={handleAISuggest} 
+                  <button
+                    type="button"
+                    onClick={handleAISuggest}
                     className="btn btn-outline btn-sm"
-                    style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '0.3rem', 
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
                       padding: '0.2rem 0.6rem',
                       borderColor: 'var(--primary)',
                       color: 'var(--text-main)',

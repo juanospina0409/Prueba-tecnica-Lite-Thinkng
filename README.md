@@ -1,4 +1,4 @@
-# 🏗️ DataSoft Inventory — Prueba Técnica Lite Thinking 2026
+# 🏗️ DataSoft Inventory — Prueba Técnica DataSoft Inventory 2026
 
 > **Aplicación fullstack** de gestión de inventarios empresariales construida con **Django + FastAPI + Next.js + PostgreSQL**, siguiendo principios de Arquitectura Limpia y microservicios.
 
@@ -311,4 +311,4 @@ El script valida:
 
 ## 📄 Licencia
 
-Proyecto desarrollado como prueba técnica para **Lite Thinking — 2026**.
+Proyecto desarrollado como prueba técnica para **DataSoft Inventory — 2026**.
