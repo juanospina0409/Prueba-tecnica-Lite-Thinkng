@@ -277,6 +277,24 @@ uvicorn main:app --port 8001
 
 ---
 
+## 🔍 Validación Automática
+
+Se incluye un script de prueba `test_api.py` en la raíz del proyecto. Puedes ejecutarlo para validar el flujo completo:
+
+```bash
+cd microservice-fastapi
+python test_api.py
+```
+
+El script valida:
+1. Login de admin y usuario externo
+2. Restricción de permisos (usuario externo no puede crear empresas)
+3. Creación de empresa y producto como admin
+4. Generación de PDF
+5. Envío simulado de correo
+6. Sugerencia de IA
+7. Consulta del libro de auditoría
+
 ## ✨ Funcionalidades Principales
 
 - **CRUD de Empresas y Productos** con control de acceso por roles.
