@@ -246,11 +246,11 @@ def send_pdf(dto: EmailSendDTO):
             payload = {
                 "sender": {
                     "name": "DataSoft Inventory",
-                    "email": "ospinajuan0409@gmail.com"  # Tu correo personal con el que te registraste en Brevo
+                    "email": "ohdude040904@gmail.com"
                 },
                 "to": [
                     {
-                        "email": dto.email  # ¡Llega a CUALQUIER correo destino (Outlook, Gmail, etc.)!
+                        "email": dto.email
                     }
                 ],
                 "subject": "Reporte de Inventario - DataSoft Inventory",
