@@ -219,42 +219,50 @@ def generate_pdf(productos: List[ProductoDTO]):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generando PDF: {str(e)}")
 
-# Enviar Reporte PDF por correo real vía Resend API
+# Enviar Reporte PDF por correo real a CUALQUIER destinatario vía Brevo API (Puerto 443)
 @app.post("/api/micro/email/send-pdf")
 def send_pdf(dto: EmailSendDTO):
     try:
-        # 1. Generar el PDF a partir de los datos
+        # 1. Generar el buffer del PDF a partir de los datos
         buffer = build_pdf_buffer(dto.productos)
         pdf_bytes = buffer.getvalue()
         
-        # 2. Leer la API Key de Resend desde Render
-        resend_api_key = os.getenv("RESEND_API_KEY")
+        # 2. Leer la API Key de Brevo desde las variables de entorno
+        brevo_api_key = os.getenv("BREVO_API_KEY")
         
-        if resend_api_key:
+        if brevo_api_key:
             # Convertir los bytes del PDF a cadena Base64
             pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
             
-            # Endpoint oficial de Resend API
-            url = "https://api.resend.com/emails"
+            # Endpoint oficial de Brevo REST API v3
+            url = "https://api.brevo.com/v3/smtp/email"
             
             headers = {
-                "Authorization": f"Bearer {resend_api_key}",
-                "Content-Type": "application/json"
+                "api-key": brevo_api_key,
+                "Content-Type": "application/json",
+                "Accept": "application/json"
             }
             
             payload = {
-                "from": "DataSoft Inventory <onboarding@resend.dev>",  # Dominio de pruebas oficial de Resend
-                "to": [dto.email],                                     # ¡Recibe cualquier correo real de destino!
+                "sender": {
+                    "name": "DataSoft Inventory",
+                    "email": "ospinajuan0409@gmail.com"  # Tu correo personal con el que te registraste en Brevo
+                },
+                "to": [
+                    {
+                        "email": dto.email  # ¡Llega a CUALQUIER correo destino (Outlook, Gmail, etc.)!
+                    }
+                ],
                 "subject": "Reporte de Inventario - DataSoft Inventory",
-                "html": """
+                "htmlContent": """
                     <h3>Hola,</h3>
                     <p>Adjunto encontrarás el reporte en formato PDF con la información consolidada de los productos por empresa.</p>
                     <br>
                     <p>Atentamente,<br><strong>DataSoft Inventory</strong></p>
                 """,
-                "attachments": [
+                "attachment": [
                     {
-                        "filename": "reporte_inventario.pdf",
+                        "name": "reporte_inventario.pdf",
                         "content": pdf_base64
                     }
                 ]
@@ -265,14 +273,14 @@ def send_pdf(dto: EmailSendDTO):
             if response.status_code in [200, 201]:
                 return {
                     "status": "success",
-                    "message": f"Reporte enviado exitosamente a {dto.email} vía Resend."
+                    "message": f"Reporte enviado exitosamente al correo {dto.email}."
                 }
             else:
-                print(f"[RESEND ERROR] Status: {response.status_code} - Detail: {response.text}")
-                raise HTTPException(status_code=500, detail=f"Error en la API de Resend: {response.text}")
+                print(f"[BREVO ERROR] Status: {response.status_code} - Detail: {response.text}")
+                raise HTTPException(status_code=500, detail=f"Error en la API de Brevo: {response.text}")
 
         else:
-            raise HTTPException(status_code=500, detail="Falta configurar la variable RESEND_API_KEY en el entorno.")
+            raise HTTPException(status_code=500, detail="Falta configurar la variable BREVO_API_KEY en el entorno.")
 
     except Exception as e:
         print(f"[MAIL CRITICAL ERROR] Detalle del fallo: {str(e)}")
