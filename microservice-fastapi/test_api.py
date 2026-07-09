@@ -2,8 +2,13 @@ import requests
 import json
 import sys
 
-BACKEND_URL = "http://localhost:8000"
-FASTAPI_URL = "http://localhost:8001"
+# para uso local
+# BACKEND_URL = "http://localhost:8000"
+# FASTAPI_URL = "http://localhost:8001"
+
+# para uso en render.com:
+BACKEND_URL = "https://backend-django-3dq5.onrender.com"
+FASTAPI_URL = "https://microservice-fastapi.onrender.com"
 
 def test_flow():
     print("=== INICIANDO VALIDACION AUTOMATICA DE APIs ===")
