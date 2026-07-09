@@ -33,7 +33,12 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 # DEBUG NO EJECUTAR EN PRODUCCIÓN
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[
+    'backend-django-3dq5.onrender.com',
+    'localhost',
+    '127.0.0.1',
+    '*'  #Si se prefiere permitir cualquier host durante la prueba
+])
 
 
 # Application definition
@@ -130,12 +135,23 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Activar Usuario personalizado
 AUTH_USER_MODEL = 'inventario.UsuarioModel'
 
 # Configuración de CORS para permitir solicitudes del frontend
 CORS_ALLOW_ALL_ORIGINS = True
+# Permitir credenciales y headers requeridos por DRF Token Auth
+CORS_ALLOW_CREDENTIALS = True
+
+# Necesario en Django 4+ para peticiones POST/PUT desde dominios externos (Render/Vercel/Localhost)
+CSRF_TRUSTED_ORIGINS = [
+    'https://backend-django-3dq5.onrender.com',
+    'https://microservice-fastapi.onrender.com',
+    'http://localhost:5173',
+    'http://localhost:3000',
+]
 
 # Configuración de Django Rest Framework
 REST_FRAMEWORK = {
@@ -143,3 +159,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
 }
+
+# URL del Microservicio FastAPI para consumo interno
+FASTAPI_SERVICE_URL = env('FASTAPI_SERVICE_URL', default='https://microservice-fastapi.onrender.com')
