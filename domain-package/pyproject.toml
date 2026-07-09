@@ -1,19 +1,19 @@
 [project]
-name = "litetest"
+name = "domain"
 version = "0.1.0"
 description = "Prueba tecnica para Desarrollador Python, Django y React."
 authors = [
     {name = "Sebastian Ospina"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = [
-    "pydantic[email] (>=2.13.4,<3.0.0)"
+    "pydantic[email] (>=2.10.0,<3.0.0)"
 ]
 
 [tool.poetry]
-package-mode = false
+package-mode = true
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core>=1.8.0"]
 build-backend = "poetry.core.masonry.api"
