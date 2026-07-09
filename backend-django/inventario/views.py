@@ -28,7 +28,7 @@ class IsAdministradorOrReadOnly(BasePermission):
 
 
 # ==========================================
-# 1. VIEWSET DE EMPRESA (Con Validación de Dominio y Permisos)
+# VIEWSET DE EMPRESA (Con Validación de Dominio y Permisos)
 # ==========================================
 class EmpresaViewSet(viewsets.ModelViewSet):
     queryset = EmpresaModel.objects.all()
@@ -36,23 +36,20 @@ class EmpresaViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdministradorOrReadOnly]
 
     def create(self, request, *args, **kwargs):
-        # 1. Pasamos los datos recibidos por la entidad Pydantic de tu dominio
+        # Pasamos los datos recibidos por la entidad Pydantic de tu dominio
         try:
             # Pydantic validará tipos, formato de correo, etc. automáticamente
-            # Si tu clase en domain requiere campos específicos, se procesan aquí
             Empresa(**request.data)
         except PydanticValidationError as e:
-            # Si el dominio rechaza los datos, respondemos de inmediato con un 400 Bad Request
             return Response(
                 {"error": "Validación de Dominio fallida", "detalles": e.errors()},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # 2. Si la capa de dominio le dio el visto bueno, dejamos que Django lo guarde
+        # Si la capa de dominio le dio el visto bueno, dejamos que Django lo guarde
         return super().create(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
-        # Hacemos la misma validación de dominio al actualizar
         try:
             Empresa(**request.data)
         except PydanticValidationError as e:

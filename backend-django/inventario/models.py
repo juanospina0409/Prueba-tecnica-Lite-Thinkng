@@ -25,10 +25,9 @@ class ProductoModel(models.Model):
     nombre = models.CharField(max_length=255)
     caracteristicas = models.TextField()
     
-    # "Precio en varias monedas": Guardamos un JSON estructurado ej: {"USD": 50, "COP": 200000}
+    # Precio en varias monedas ej: {"USD": 50, "COP": 200000}
     precios = models.JSONField(default=dict)
     
-    # Relación con la Empresa
     # Al eliminar una empresa, se eliminan sus productos en cascada
     empresa = models.ForeignKey(EmpresaModel, on_delete=models.CASCADE, related_name='productos')
 

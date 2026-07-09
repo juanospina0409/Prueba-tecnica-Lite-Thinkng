@@ -14,7 +14,6 @@ class EmpresaSerializer(serializers.ModelSerializer):
 # SERIALIZADOR DE PRODUCTO
 # ==========================================
 class ProductoSerializer(serializers.ModelSerializer):
-    # Mostramos los datos de la empresa legible en las consultas de lectura
     empresa_detalle = EmpresaSerializer(source='empresa', read_only=True)
     
     class Meta:
@@ -35,7 +34,7 @@ class UsuarioRegistroSerializer(serializers.ModelSerializer):
         fields = ['correo', 'password', 'rol']
 
     def create(self, validated_data):
-        # Usamos el manager personalizado que creamos en models.py para encriptar la contraseña correctamente
+        # Se usa el manager personalizado para encriptar la contraseña correctamente
         user = UsuarioModel.objects.create_user(
             correo=validated_data['correo'],
             password=validated_data['password'],
