@@ -219,47 +219,43 @@ def generate_pdf(productos: List[ProductoDTO]):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generando PDF: {str(e)}")
 
-
-# Enviar Reporte PDF por correo vía API HTTP de Mailtrap
+# Enviar Reporte PDF por correo real vía Resend API
 @app.post("/api/micro/email/send-pdf")
 def send_pdf(dto: EmailSendDTO):
     try:
+        # 1. Generar el PDF a partir de los datos
         buffer = build_pdf_buffer(dto.productos)
         pdf_bytes = buffer.getvalue()
         
-        # Leer variables de entorno desde Render
-        mailtrap_api_token = os.getenv("MAILTRAP_API_TOKEN")
-        mailtrap_inbox_id = os.getenv("MAILTRAP_INBOX_ID", "4762103")
+        # 2. Leer la API Key de Resend desde Render
+        resend_api_key = os.getenv("RESEND_API_KEY")
         
-        if mailtrap_api_token and mailtrap_inbox_id:
+        if resend_api_key:
+            # Convertir los bytes del PDF a cadena Base64
             pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
             
-            # Endpoint oficial de Mailtrap Sandbox API
-            url = f"https://sandbox.api.mailtrap.io/api/send/{mailtrap_inbox_id}"
+            # Endpoint oficial de Resend API
+            url = "https://api.resend.com/emails"
             
             headers = {
-                "Authorization": f"Bearer {mailtrap_api_token}",
+                "Authorization": f"Bearer {resend_api_key}",
                 "Content-Type": "application/json"
             }
             
             payload = {
-                "from": {
-                    "email": "datasoftinventoryapp@gmail.com",
-                    "name": "DataSoft Inventory"
-                },
-                "to": [
-                    {
-                        "email": dto.email
-                    }
-                ],
+                "from": "DataSoft Inventory <onboarding@resend.dev>",  # Dominio de pruebas oficial de Resend
+                "to": [dto.email],                                     # ¡Recibe cualquier correo real de destino!
                 "subject": "Reporte de Inventario - DataSoft Inventory",
-                "text": "Hola,\n\nAdjunto encontrarás el reporte en formato PDF con la información consolidada de los productos por empresa.\n\nAtentamente,\nDataSoft Inventory",
+                "html": """
+                    <h3>Hola,</h3>
+                    <p>Adjunto encontrarás el reporte en formato PDF con la información consolidada de los productos por empresa.</p>
+                    <br>
+                    <p>Atentamente,<br><strong>DataSoft Inventory</strong></p>
+                """,
                 "attachments": [
                     {
-                        "content": pdf_base64,
                         "filename": "reporte_inventario.pdf",
-                        "type": "application/pdf",
-                        "disposition": "attachment"
+                        "content": pdf_base64
                     }
                 ]
             }
@@ -269,29 +265,20 @@ def send_pdf(dto: EmailSendDTO):
             if response.status_code in [200, 201]:
                 return {
                     "status": "success",
-                    "message": f"Reporte enviado exitosamente a la bandeja de Mailtrap."
+                    "message": f"Reporte enviado exitosamente a {dto.email} vía Resend."
                 }
             else:
-                print(f"[MAILTRAP ERROR] Status: {response.status_code} - Detail: {response.text}")
-                raise HTTPException(status_code=500, detail=f"Error en la API de Mailtrap: {response.text}")
+                print(f"[RESEND ERROR] Status: {response.status_code} - Detail: {response.text}")
+                raise HTTPException(status_code=500, detail=f"Error en la API de Resend: {response.text}")
 
         else:
-            # Modo Simulación si faltan variables
-            os.makedirs("scratch", exist_ok=True)
-            sim_filename = f"scratch/simulado_mail_{int(time.time())}.pdf"
-            with open(sim_filename, "wb") as f:
-                f.write(pdf_bytes)
-                
-            return {
-                "status": "simulated",
-                "message": "[Modo Simulación] No se configuró MAILTRAP_API_TOKEN o MAILTRAP_INBOX_ID."
-            }
+            raise HTTPException(status_code=500, detail="Falta configurar la variable RESEND_API_KEY en el entorno.")
 
     except Exception as e:
         print(f"[MAIL CRITICAL ERROR] Detalle del fallo: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error enviando correo: {str(e)}")
 
-# Funcionalidad Novedosa de Asistente de IA (Gemini)
+# Funcionalidad de Asistente de IA (Gemini)
 @app.post("/api/micro/ai/suggest")
 def ai_suggest_description(dto: AISuggestDTO):
     gemini_key = os.getenv("GEMINI_API_KEY")
