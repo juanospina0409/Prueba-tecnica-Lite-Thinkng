@@ -3,6 +3,7 @@ import os
 import time
 import hashlib
 import requests
+import base64
 from typing import List, Dict, Optional
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
@@ -219,85 +220,77 @@ def generate_pdf(productos: List[ProductoDTO]):
         raise HTTPException(status_code=500, detail=f"Error generando PDF: {str(e)}")
 
 
-# Enviar Reporte PDF por correo
+# Enviar Reporte PDF por correo vía API HTTP de Mailtrap
 @app.post("/api/micro/email/send-pdf")
 def send_pdf(dto: EmailSendDTO):
     try:
         buffer = build_pdf_buffer(dto.productos)
         pdf_bytes = buffer.getvalue()
         
-        # Leer credenciales del archivo .env
-        smtp_server = os.getenv("SMTP_SERVER")
-        smtp_port = os.getenv("SMTP_PORT")
-        smtp_user = os.getenv("SMTP_USER")
-        smtp_password = os.getenv("SMTP_PASSWORD")
+        # Leer Token de API de Mailtrap desde variables de entorno
+        mailtrap_api_token = os.getenv("MAILTRAP_API_TOKEN")
         
-        # DEBUG en consola para asegurar que las variables no vengan vacías
-        print(f"[SMTP DEBUG] Server: {smtp_server}, Port: {smtp_port}, User: {smtp_user}")
-        
-        if smtp_server and smtp_user and smtp_password:
-            import smtplib
-            from email.mime.multipart import MIMEMultipart
-            from email.mime.text import MIMEText
-            from email.mime.base import MIMEBase
-            from email import encoders
-
-            msg = MIMEMultipart()
-            msg['From'] = smtp_user
-            msg['To'] = dto.email
-            msg['Subject'] = "Reporte de Inventario - DataSoft Inventory"
+        if mailtrap_api_token:
+            # Codificar el PDF en Base64 para adjuntarlo en el JSON
+            pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
             
-            body = "Hola,\n\nAdjunto encontrarás el reporte en formato PDF con la información consolidada de los productos por empresa.\n\nAtentamente,\nDataSoft Inventory"
-            msg.attach(MIMEText(body, 'plain'))
+            # Endpoint oficial de Mailtrap Sending API
+            url = "https://send.api.mailtrap.io/api/send"
             
-            # Preparar el archivo adjunto
-            part = MIMEBase('application', 'octet-stream')
-            part.set_payload(pdf_bytes)
-            encoders.encode_base64(part)
-            part.add_header('Content-Disposition', f'attachment; filename="reporte_inventario.pdf"')
-            msg.attach(part)
-            
-            # Proceso de conexión robusto
-            port_num = int(smtp_port or 587)
-            
-            # Si usas el puerto 465 se requiere SMTP_SSL, para 587 se usa SMTP estándar + starttls
-            if port_num == 465:
-                server = smtplib.SMTP_SSL(smtp_server, port_num, timeout=15)
-            else:
-                server = smtplib.SMTP(smtp_server, port_num, timeout=15)
-                server.ehlo()
-                server.starttls() # Cifrado seguro obligatorio
-                server.ehlo()
-            
-            # Intento de Logueo y Envío
-            server.login(smtp_user, smtp_password)
-            server.sendmail(smtp_user, dto.email, msg.as_string())
-            server.quit()
-            
-            return {
-                "status": "success",
-                "message": f"Reporte enviado exitosamente al correo {dto.email}."
+            headers = {
+                "Authorization": f"Bearer {mailtrap_api_token}",
+                "Content-Type": "application/json"
             }
+            
+            payload = {
+                "from": {
+                    "email": "mailtrap@demomailtrap.com",  # O tu correo de remitente verificado en Mailtrap
+                    "name": "DataSoft Inventory"
+                },
+                "to": [
+                    {
+                        "email": dto.email
+                    }
+                ],
+                "subject": "Reporte de Inventario - DataSoft Inventory",
+                "text": "Hola,\n\nAdjunto encontrarás el reporte en formato PDF con la información consolidada de los productos por empresa.\n\nAtentamente,\nDataSoft Inventory",
+                "attachments": [
+                    {
+                        "content": pdf_base64,
+                        "filename": "reporte_inventario.pdf",
+                        "type": "application/pdf",
+                        "disposition": "attachment"
+                    }
+                ]
+            }
+            
+            response = requests.post(url, headers=headers, json=payload, timeout=15)
+            
+            if response.status_code in [200, 201]:
+                return {
+                    "status": "success",
+                    "message": f"Reporte enviado exitosamente al correo {dto.email} vía Mailtrap API."
+                }
+            else:
+                print(f"[MAILTRAP ERROR] Status: {response.status_code} - Detail: {response.text}")
+                raise HTTPException(status_code=500, detail=f"Error en la API de Mailtrap: {response.text}")
+
         else:
-            # Caída en simulación si faltan variables en el .env
+            # Caída en modo simulación local si no hay Token configurado
             os.makedirs("scratch", exist_ok=True)
             sim_filename = f"scratch/simulado_mail_{int(time.time())}.pdf"
             with open(sim_filename, "wb") as f:
                 f.write(pdf_bytes)
                 
-            print(f"[MAIL SIMULATOR] Variables SMTP faltantes. Guardado local en: {sim_filename}")
+            print(f"[MAIL SIMULATOR] MAILTRAP_API_TOKEN no configurada. Guardado local en: {sim_filename}")
             
             return {
                 "status": "simulated",
-                "message": f"[Modo Simulación] No se configuró SMTP completo. Archivo PDF guardado localmente.",
-                "filepath": os.path.abspath(sim_filename)
+                "message": f"[Modo Simulación] No se configuró MAILTRAP_API_TOKEN. Archivo PDF guardado localmente."
             }
-            
-    except smtplib.SMTPAuthenticationError as auth_err:
-        print(f"[SMTP AUTH ERROR] Credenciales rechazadas por el servidor de correo: {str(auth_err)}")
-        raise HTTPException(status_code=401, detail=f"Fallo de autenticación en el correo electrónico. Revisa usuario/contraseña de aplicación: {str(auth_err)}")
+
     except Exception as e:
-        print(f"[SMTP CRITICAL ERROR] Detalle del fallo: {str(e)}")
+        print(f"[MAIL CRITICAL ERROR] Detalle del fallo: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error enviando correo: {str(e)}")
 
 # Funcionalidad Novedosa de Asistente de IA (Gemini)
