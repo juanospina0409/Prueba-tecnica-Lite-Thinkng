@@ -227,15 +227,15 @@ def send_pdf(dto: EmailSendDTO):
         buffer = build_pdf_buffer(dto.productos)
         pdf_bytes = buffer.getvalue()
         
-        # Leer Token de API de Mailtrap desde variables de entorno
+        # Leer variables de entorno desde Render
         mailtrap_api_token = os.getenv("MAILTRAP_API_TOKEN")
+        mailtrap_inbox_id = os.getenv("MAILTRAP_INBOX_ID", "4762103")
         
-        if mailtrap_api_token:
-            # Codificar el PDF en Base64 para adjuntarlo en el JSON
+        if mailtrap_api_token and mailtrap_inbox_id:
             pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
             
-            # Endpoint oficial de Mailtrap Sending API
-            url = "https://send.api.mailtrap.io/api/send"
+            # Endpoint oficial de Mailtrap Sandbox API
+            url = f"https://sandbox.api.mailtrap.io/api/send/{mailtrap_inbox_id}"
             
             headers = {
                 "Authorization": f"Bearer {mailtrap_api_token}",
@@ -244,7 +244,7 @@ def send_pdf(dto: EmailSendDTO):
             
             payload = {
                 "from": {
-                    "email": "mailtrap@demomailtrap.com",  # O tu correo de remitente verificado en Mailtrap
+                    "email": "datasoftinventoryapp@gmail.com",
                     "name": "DataSoft Inventory"
                 },
                 "to": [
@@ -269,24 +269,22 @@ def send_pdf(dto: EmailSendDTO):
             if response.status_code in [200, 201]:
                 return {
                     "status": "success",
-                    "message": f"Reporte enviado exitosamente al correo {dto.email} vía Mailtrap API."
+                    "message": f"Reporte enviado exitosamente a la bandeja de Mailtrap."
                 }
             else:
                 print(f"[MAILTRAP ERROR] Status: {response.status_code} - Detail: {response.text}")
                 raise HTTPException(status_code=500, detail=f"Error en la API de Mailtrap: {response.text}")
 
         else:
-            # Caída en modo simulación local si no hay Token configurado
+            # Modo Simulación si faltan variables
             os.makedirs("scratch", exist_ok=True)
             sim_filename = f"scratch/simulado_mail_{int(time.time())}.pdf"
             with open(sim_filename, "wb") as f:
                 f.write(pdf_bytes)
                 
-            print(f"[MAIL SIMULATOR] MAILTRAP_API_TOKEN no configurada. Guardado local en: {sim_filename}")
-            
             return {
                 "status": "simulated",
-                "message": f"[Modo Simulación] No se configuró MAILTRAP_API_TOKEN. Archivo PDF guardado localmente."
+                "message": "[Modo Simulación] No se configuró MAILTRAP_API_TOKEN o MAILTRAP_INBOX_ID."
             }
 
     except Exception as e:
