@@ -3,6 +3,9 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import { Box, Plus, Edit2, Trash2, X, AlertCircle, Sparkles, Wand2 } from 'lucide-react';
 
+const DJANGO_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backend-django-3dq5.onrender.com';
+const FASTAPI_URL = process.env.NEXT_PUBLIC_FASTAPI_URL || 'https://microservice-fastapi.onrender.com';
+
 export default function Productos() {
   const [productos, setProductos] = useState([]);
   const [empresas, setEmpresas] = useState([]);
@@ -34,8 +37,8 @@ export default function Productos() {
 
     try {
       const [resProd, resEmp] = await Promise.all([
-        fetch('http://localhost:8000/api/productos/', { headers }),
-        fetch('http://localhost:8000/api/empresas/', { headers })
+        fetch(`${DJANGO_URL}/api/productos/`, { headers }),
+        fetch(`${DJANGO_URL}/api/empresas/`, { headers })
       ]);
 
       if (resProd.ok && resEmp.ok) {
@@ -107,7 +110,7 @@ export default function Productos() {
     setAiLoading(true);
     setFormError('');
     try {
-      const res = await fetch('http://localhost:8001/api/micro/ai/suggest', {
+      const res = await fetch(`${FASTAPI_URL}/api/micro/ai/suggest`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -158,8 +161,8 @@ export default function Productos() {
     };
 
     const url = modalMode === 'create'
-      ? 'http://localhost:8000/api/productos/'
-      : `http://localhost:8000/api/productos/${formData.id}/`;
+      ? `${DJANGO_URL}/api/productos/`
+      : `${DJANGO_URL}/api/productos/${formData.id}/`;
 
     const method = modalMode === 'create' ? 'POST' : 'PUT';
 
@@ -179,7 +182,7 @@ export default function Productos() {
 
         // Registrar en Blockchain
         try {
-          await fetch('http://localhost:8001/api/micro/blockchain/add', {
+          await fetch(`${FASTAPI_URL}/api/micro/blockchain/add`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -206,7 +209,7 @@ export default function Productos() {
 
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`http://localhost:8000/api/productos/${id}/`, {
+      const res = await fetch(`${DJANGO_URL}/api/productos/${id}/`, {
         method: 'DELETE',
         headers: { 'Authorization': `Token ${token}` }
       });
@@ -216,7 +219,7 @@ export default function Productos() {
 
         // Registrar en Blockchain
         try {
-          await fetch('http://localhost:8001/api/micro/blockchain/add', {
+          await fetch(`${FASTAPI_URL}/api/micro/blockchain/add`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

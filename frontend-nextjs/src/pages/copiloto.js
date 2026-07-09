@@ -3,6 +3,8 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import { Cpu, ShieldCheck, ShieldAlert, Sparkles, RefreshCw, Layers } from 'lucide-react';
 
+const FASTAPI_URL = process.env.NEXT_PUBLIC_FASTAPI_URL || 'https://microservice-fastapi.onrender.com';
+
 export default function Copiloto() {
   const [ledger, setLedger] = useState({ chain: [], is_valid: true, length: 0 });
   const [loadingLedger, setLoadingLedger] = useState(true);
@@ -16,7 +18,7 @@ export default function Copiloto() {
   const fetchLedger = async () => {
     setLoadingLedger(true);
     try {
-      const res = await fetch('http://localhost:8001/api/micro/blockchain/ledger');
+      const res = await fetch(`${FASTAPI_URL}/api/micro/blockchain/ledger`);
       if (res.ok) {
         const data = await res.json();
         setLedger(data);
@@ -40,7 +42,7 @@ export default function Copiloto() {
     setAiResult('');
 
     try {
-      const res = await fetch('http://localhost:8001/api/micro/ai/suggest', {
+      const res = await fetch(`${FASTAPI_URL}/api/micro/ai/suggest`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

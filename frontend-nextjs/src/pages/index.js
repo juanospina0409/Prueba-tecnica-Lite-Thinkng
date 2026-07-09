@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Layout from '../components/Layout';
 import { Building2, Box, ArrowRight, ClipboardList, ShieldAlert, Cpu } from 'lucide-react';
 
+const DJANGO_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backend-django-3dq5.onrender.com';
+
 export default function Home() {
   const [stats, setStats] = useState({ empresas: 0, productos: 0 });
   const [user, setUser] = useState({ correo: '', rol: '' });
@@ -23,8 +25,8 @@ export default function Home() {
 
       try {
         const [resEmp, resProd] = await Promise.all([
-          fetch('http://localhost:8000/api/empresas/', { headers }),
-          fetch('http://localhost:8000/api/productos/', { headers })
+          fetch(`${DJANGO_URL}/api/empresas/`, { headers }),
+          fetch(`${DJANGO_URL}/api/productos/`, { headers })
         ]);
 
         if (resEmp.ok && resProd.ok) {

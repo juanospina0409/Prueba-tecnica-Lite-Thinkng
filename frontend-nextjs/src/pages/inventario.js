@@ -3,6 +3,9 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import { ClipboardList, Download, Mail, Send, AlertCircle, CheckCircle2, Search } from 'lucide-react';
 
+const DJANGO_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backend-django-3dq5.onrender.com';
+const FASTAPI_URL = process.env.NEXT_PUBLIC_FASTAPI_URL || 'https://microservice-fastapi.onrender.com';
+
 export default function Inventario() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +22,7 @@ export default function Inventario() {
   const fetchProductos = async () => {
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch('http://localhost:8000/api/productos/', {
+      const res = await fetch(`${DJANGO_URL}/api/productos/`, {
         headers: { 'Authorization': `Token ${token}` }
       });
       if (res.ok) {
@@ -55,7 +58,7 @@ export default function Inventario() {
     if (productos.length === 0) return;
 
     try {
-      const res = await fetch('http://localhost:8001/api/micro/pdf/generate', {
+      const res = await fetch(`${FASTAPI_URL}/api/micro/pdf/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -90,7 +93,7 @@ export default function Inventario() {
     setEmailStatus(null);
 
     try {
-      const res = await fetch('http://localhost:8001/api/micro/email/send-pdf', {
+      const res = await fetch(`${FASTAPI_URL}/api/micro/email/send-pdf`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

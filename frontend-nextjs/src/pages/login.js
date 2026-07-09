@@ -4,6 +4,8 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import { Mail, Lock, LogIn, AlertCircle } from 'lucide-react';
 
+const DJANGO_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backend-django-3dq5.onrender.com';
+
 export default function Login() {
   const router = useRouter();
   const [correo, setCorreo] = useState('');
@@ -17,7 +19,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:8000/api/auth/login/', {
+      const res = await fetch(`${DJANGO_URL}/api/auth/login/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
