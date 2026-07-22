@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, BasePermission, SAFE_METHODS
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
+from django.http import JsonResponse
 from pydantic import ValidationError as PydanticValidationError
 
 from .models import EmpresaModel, ProductoModel, UsuarioModel
@@ -12,6 +13,11 @@ from .serializers import EmpresaSerializer, ProductoSerializer, UsuarioRegistroS
 # Se importan las entidades Pydantic del paquete de dominio
 from domain.entities import Empresa
 
+# ==========================================
+# Endpoint de Health Check
+# ==========================================
+def health_check(request):
+    return JsonResponse({"status": "healthy"}, status=200)
 
 # ==========================================
 # PERMISO PERSONALIZADO PARA ADMINISTRADORES

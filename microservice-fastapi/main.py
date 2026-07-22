@@ -201,6 +201,10 @@ init_blockchain()
 # ENDPOINTS API
 # ==========================================
 
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
 @app.get("/")
 def read_root():
     return {"name": "FastAPI Microservice", "status": "Running"}

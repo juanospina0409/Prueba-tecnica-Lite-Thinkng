@@ -19,5 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('inventario.urls')), # Todo nuestro API colgará de /api/
+    path('api/', include('inventario.urls')),
+    path('api/health/', health_check, name='health_check'),
 ]

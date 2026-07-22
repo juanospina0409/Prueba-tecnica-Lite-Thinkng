@@ -101,7 +101,7 @@ export default function Productos() {
     setFormData({ ...formData, [name]: value });
   };
 
-  // REQUERIMIENTO g) Asistente de Optimización de Características con IA
+  // Asistente de Optimización de Características con IA
   const handleAISuggest = async () => {
     if (!formData.nombre) {
       setFormError('Escriba el nombre del producto primero para guiar al asistente de IA');
