@@ -301,10 +301,10 @@ def ai_suggest_description(dto: AISuggestDTO):
             detail="Error de Configuración: La variable GEMINI_API_KEY no está definida en el archivo .env o no se leyó correctamente."
         )
 
-    # 1. Usamos v1beta con la estructura oficial recomendada por Google
+    # Se utiliza v1beta con la estructura oficial recomendada por Google
     url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent"
     
-    # Pasamos la API key como un parámetro Query limpio
+    # Se pasa la API key como un parámetro Query limpio
     params = {"key": gemini_key}
     headers = {"Content-Type": "application/json"}
     
@@ -323,7 +323,7 @@ def ai_suggest_description(dto: AISuggestDTO):
     }
     
     try:
-        # 2. Agregamos el argumento 'params=params' para que requests construya la URL de forma segura
+        # Se agrega el argumento 'params=params' para que requests construya la URL de forma segura
         res = requests.post(url, json=payload, headers=headers, params=params, timeout=12)
         
         if res.status_code == 200:

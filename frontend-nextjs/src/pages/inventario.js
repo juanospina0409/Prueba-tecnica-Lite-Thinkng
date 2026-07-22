@@ -194,7 +194,7 @@ export default function Inventario() {
           <span>Enviar Reporte por Correo Electrónico</span>
         </h3>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>
-          Ingresa un correo electrónico y el microservicio generará el PDF actual y lo enviará vía SMTP o REST API.
+          Ingresa un correo electrónico y el microservicio generará el PDF actual y lo enviará vía la API de Brevo.
         </p>
 
         {emailStatus && (

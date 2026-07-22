@@ -57,7 +57,7 @@ PruebaTecnicaLiteThinking/
 |---|---|
 | **`domain-package/`** | Paquete Python gestionado con **Poetry**. Contiene las entidades puras del negocio (`Empresa`, `Producto`, `Usuario`) y sus reglas de validación, usando **Pydantic**. Está **completamente desacoplada** de Django, HTTP, vistas o infraestructura. |
 | **`backend-django/`** | API REST desarrollada con **Django 6 + Django REST Framework**. Gestiona autenticación con tokens, CRUD de empresas y productos, y persistencia en **PostgreSQL**. Consume `domain-package` a través del `sys.path`. |
-| **`microservice-fastapi/`** | Microservicio independiente con **FastAPI**. Proporciona: generación de **reportes PDF** (ReportLab), envío de **emails con adjuntos** (SMTP/Mailtrap), sugerencias con **IA Generativa** (Gemini API), y un **libro de auditoría criptográfico** (Blockchain simplificada con SHA-256). |
+| **`microservice-fastapi/`** | Microservicio independiente con **FastAPI**. Proporciona: generación de **reportes PDF** (ReportLab), envío de **emails con adjuntos** (Brevo REST API), sugerencias con **IA Generativa** (Gemini API), y un **libro de auditoría criptográfico** (Blockchain simplificada con SHA-256). |
 | **`frontend-nextjs/`** | Interfaz de usuario con **Next.js 14 + React 18**. Incluye páginas para login, gestión de empresas, productos, vista de inventario con descarga/envío de PDF, y un copiloto de IA. Usa **Lucide React** para iconografía. |
 
 ---
@@ -72,7 +72,7 @@ PruebaTecnicaLiteThinking/
 | Dominio | Python, Pydantic v2, Poetry |
 | Base de Datos | PostgreSQL 16 + pgvector (Docker) |
 | Infraestructura | Docker Compose |
-| Email | SMTP (Mailtrap para testing) |
+| Email | Brevo REST API |
 | IA Generativa | Google Gemini 2.5 Flash |
 | Auditoría | Blockchain simplificada (SHA-256) |
 
@@ -107,7 +107,7 @@ Copia la plantilla y edita los valores si lo necesitas (los valores por defecto 
 cp .env.example .env
 ```
 
-> 📌 La plantilla `.env.example` ya viene con credenciales de prueba de Mailtrap y datos de la base de datos local.
+> 📌 La plantilla `.env.example` ya viene con los datos de configuración de la base de datos local. Deberás configurar tu `BREVO_API_KEY` y `GEMINI_API_KEY`.
 
 ### 3. Levantar la base de datos con Docker
 
@@ -201,10 +201,22 @@ Consulta el archivo [`.env.example`](.env.example) como plantilla:
 | `DB_PASSWORD` | Contraseña de PostgreSQL | `lite_password` |
 | `DB_NAME` | Nombre de la base de datos | `lite_db` |
 | `GEMINI_API_KEY` | API Key de Google Gemini (para IA) | `tu_api_key_aqui` |
-| `SMTP_SERVER` | Servidor SMTP | `sandbox.smtp.mailtrap.io` |
-| `SMTP_USER` | Usuario SMTP (Mailtrap) | `tu_usuario_mailtrap` |
-| `SMTP_PASSWORD` | Contraseña SMTP (Mailtrap) | `tu_password_mailtrap` |
-| `SMTP_PORT` | Puerto SMTP | `2525` |
+| `BREVO_API_KEY` | API Key de Brevo (para envío de correos) | `tu_api_key_de_brevo` |
+
+
+### 🌐 Variables de Entorno en Producción (Despliegue)
+
+Cuando el proyecto se encuentra desplegado en producción, las variables se configuran en las plataformas de hosting en lugar de usar el archivo `.env` local:
+
+* **En Render** (Backend Django y Microservicio FastAPI):
+  * `BREVO_API_KEY`: API Key para el envío de correos desde brevo.com.
+  * `GEMINI_API_KEY`: API Key para el copiloto de IA de Google Gemini.
+  * Variables de la base de datos PostgreSQL de producción (`DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_HOST`).
+  * `DJANGO_SECRET_KEY`: Llave secreta para Django.
+
+* **En Vercel** (Frontend Next.js):
+  * `NEXT_PUBLIC_API_URL`: URL de la API del backend en Render (ej. `https://backend-django-3dq5.onrender.com`).
+  * `NEXT_PUBLIC_FASTAPI_URL`: URL de la API del microservicio en Render (ej. `https://microservice-fastapi.onrender.com`).
 
 ---
 
@@ -301,7 +313,7 @@ El script valida:
 - **Autenticación con tokens** y contraseñas encriptadas.
 - **Roles de usuario**: `Administrador` (CRUD completo) y `Externo` (solo lectura).
 - **Generación de reportes PDF** con ReportLab desde el microservicio.
-- **Envío de reportes por email** vía SMTP (integración con Mailtrap para testing).
+- **Envío de reportes por email** a cualquier destinatario vía la API REST de Brevo.
 - **Copiloto de IA** que sugiere descripciones de productos usando Google Gemini.
 - **Libro de auditoría criptográfico (Blockchain)** con integridad verificable en tiempo real.
 - **Capa de dominio independiente** gestionada con Poetry, siguiendo Clean Architecture.

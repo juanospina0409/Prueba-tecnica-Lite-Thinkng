@@ -42,7 +42,6 @@ class EmpresaViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdministradorOrReadOnly]
 
     def create(self, request, *args, **kwargs):
-        # Pasamos los datos recibidos por la entidad Pydantic de tu dominio
         try:
             # Pydantic validará tipos, formato de correo, etc. automáticamente
             Empresa(**request.data)
@@ -52,7 +51,7 @@ class EmpresaViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Si la capa de dominio le dio el visto bueno, dejamos que Django lo guarde
+        # Si la capa de dominio le dio el visto bueno entonces Django lo guarda
         return super().create(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
